@@ -20,6 +20,9 @@ namespace MongoPOC.Controllers
         [ProducesResponseType(typeof(List<ProductDTO>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromQuery]int page = 1, [FromQuery]int size = 10)
         {
+            if (page < 0 || size < 0)
+                return BadRequest("Invalid page or size");
+
             var response = await _productService.GetProductsAsync(page, size);
             return Ok(response);
         }
