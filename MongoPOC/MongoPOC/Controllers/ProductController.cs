@@ -18,6 +18,7 @@ namespace MongoPOC.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(List<ProductDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get([FromQuery]int page = 1, [FromQuery]int size = 10)
         {
             if (page < 0 || size < 0)
