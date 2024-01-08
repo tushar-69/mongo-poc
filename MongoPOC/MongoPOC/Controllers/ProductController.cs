@@ -2,6 +2,7 @@
 using MongoPOC.Models;
 using MongoPOC.Models.DTOs;
 using MongoPOC.Services;
+using System.Net;
 
 namespace MongoPOC.Controllers
 {
@@ -22,7 +23,10 @@ namespace MongoPOC.Controllers
         public async Task<IActionResult> Get([FromQuery]int page = 1, [FromQuery]int size = 10)
         {
             if (page < 0 || size < 0)
-                return BadRequest("Invalid page or size");
+                return StatusCode((int)HttpStatusCode.BadRequest, new ProblemDetails() { 
+                    Title = "Bad Request",
+                    Detail = "Page or size should be a positive value"
+                });
 
             var response = await _productService.GetProductsAsync(page, size);
             return Ok(response);
@@ -40,7 +44,10 @@ namespace MongoPOC.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return NotFound(ex.Message);
+                return StatusCode((int)HttpStatusCode.BadRequest, new ProblemDetails() { 
+                    Title = "Bad request",
+                    Detail = ex.Message
+                });
             }
         }
 
@@ -50,7 +57,11 @@ namespace MongoPOC.Controllers
         public async Task<IActionResult> Post([FromBody] Product product)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState.Values);
+                return StatusCode((int)HttpStatusCode.BadRequest, new ProblemDetails()
+                {
+                    Title = "Bad request",
+                    Detail = ModelState.Values.ToString()
+                });
 
             var ID = await _productService.CreateProductAsync(product);
             return CreatedAtAction(nameof(GetById), new { Id = ID }, product);
@@ -72,7 +83,11 @@ namespace MongoPOC.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode((int)HttpStatusCode.BadRequest, new ProblemDetails()
+                {
+                    Title = "Bad request",
+                    Detail = ex.Message
+                });
             }
         }
 
@@ -88,7 +103,11 @@ namespace MongoPOC.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return NotFound(ex.Message);
+                return StatusCode((int)HttpStatusCode.BadRequest, new ProblemDetails()
+                {
+                    Title = "Bad request",
+                    Detail = ex.Message
+                });
             }
         }
     }
