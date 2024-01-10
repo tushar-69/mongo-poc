@@ -1,0 +1,6 @@
+@MongoPOC_HostAddress = http://localhost:5051
+
+GET {{MongoPOC_HostAddress}}/product
+Accept: application/json
+
+###
